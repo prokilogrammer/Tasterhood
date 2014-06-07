@@ -1,7 +1,29 @@
 <html>
 
   <body>
-    <p> {{ message }} </p>
+    <center> <h1> Welcome to Tasterhood </h1></center>
+    Here are our users: </br>
+
+    {% if users %}
+      <table border=1>
+        <tr>
+          <th> First Name </th>
+          <th> Type </th>
+          <th> Address </th>
+          <th> Email </th>
+        </tr>
+
+        {% for user in users %}
+        <tr>
+          <td> {{ user.first_name }} </td>
+          <td> {{ user.user_type }} </td>
+          <td> {{ user.contact }} </td>
+          <td> {{ user.contact.email }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+
   </body>
 
 </html>

@@ -9,7 +9,7 @@ class Contacts(models.Model):
   state = models.CharField(max_length=255)
   country = models.CharField(max_length=255)
   zipcode = models.IntegerField()
-  email = models.EmailField(max_length=255)
+  email = models.EmailField(max_length=255, unique=True)
   phone1 = models.CharField(max_length=32, null=True)
   phone2 = models.CharField(max_length=32, null=True)
   website = models.URLField(max_length=512, null=True)

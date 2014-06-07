@@ -45,3 +45,6 @@ docs/_build/
 
 # SQLite db
 *.db
+
+venv
+staticfiles
