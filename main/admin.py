@@ -1,10 +1,10 @@
 from django.contrib import admin
-from main.models import Contacts, Users, Login, Restaurants, Offers
+from main.models import Contact, UserProfile, Login, Restaurant, Offer
 
 # Register your models here.
-admin.site.register(Contacts)
-admin.site.register(Users)
+admin.site.register(Contact)
+admin.site.register(UserProfile)
 admin.site.register(Login)
-admin.site.register(Restaurants)
-admin.site.register(Offers)
+admin.site.register(Restaurant)
+admin.site.register(Offer)
 
