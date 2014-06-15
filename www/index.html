@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+
+  <body>
+
+    <!-- My HTML -->
+    <h1> List of registered users </h1> 
+
+    <input type='submit' id = 'refresh'> Refresh </input>
+
+    <table id="users_table">
+      <tr>
+        <th> First Name </th>
+        <th> Last Name </th>
+        <th> Address </th>
+        <th> Email </th>
+        <th> Type </th>
+        <th> Cuisine Preferences </th>
+      </tr>
+    </table>
+
+
+    <script type='text/template' id='user-template'>
+      <td> <%- first_name %> </td>
+      <td> <%- last_name %> </td>
+      <td> <%- address %> </td>
+      <td> <%- email %> </td>
+      <td> <%- type %> </td>
+      <td> <%- cuisine_pref %> </td>
+    </script>
+    
+
+    <!-- Libraries -->
+    <!-- FIXME: Customize library versions -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js" type="text/javascript"></script>  
+
+    <!-- Javascript -->
+    <script type = "text/javascript">
+      var app = {};    // A namespace for our app
+      app.User = Backbone.Model.extend({
+        defaults: {
+          username: '',
+          first_name: '',
+          last_name: '',
+          address: '',
+          email: '',
+          type: '',
+          cuisine_pref: ''
+        }
+      });
+
+      app.UserCollection = Backbone.Collection.extend({
+        model: app.User,
+        localStorage: new Store("tasterhood-users")
+      });
+
+      // Instantiate the collection
+      app.userCollection = new app.UserCollection();
+
+      // Views
+      app.UserView = Backbone.View.extend({
+        tagName: 'tr',
+        template: _.template($('#user-template').html()),
+        render: function(){
+          this.$el.html(this.template(this.model.toJSON()));
+          return this; // enable chained calls
+        }
+      });
+
+      app.AppView = Backbone.View.extend({
+        el: '#users_table',
+
+        initialize: function() {
+          this.refreshButton = this.$('#refresh')
+
+          // When new elements are added to collection, render them
+          app.userCollection.on('add', this.addOne, this);
+          app.userCollection.on('reset', this.addAll, this);
+          app.userCollection.fetch();  // Load from local storage
+        },
+
+        events: {
+          'click #refresh': 'refreshUsersList'
+        },
+
+        refreshUsersList: function(e){
+          app.userCollection.fetch();
+        },
+
+        addOne: function(user){
+          var view = new app.UserView({model: user});
+          $('#users_table').append(view.render().el);
+        },
+
+        addAll: function(){
+          this.$('#users_table').html(''); // clean the list
+          app.userCollection.each(this.addOne, this);
+        }
+      });
+
+    // Initialize the view
+    app.appView = new app.AppView();
+
+    </script>
+
+  </body>
+
+</html>
